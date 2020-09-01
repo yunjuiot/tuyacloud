@@ -1,7 +1,7 @@
 # tuyacloud
 
-[![Build Status](https://github.com/yunjuiot/tuyaclou/workflows/Greet%20Everyone/badge.svg)](https://github.com/yunjuiot/tuyacloud/actions)
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/yunjuiot/tuyacloud)](https://pkg.go.dev/github.com/yunjuiot/tuyacloud)
+[![Build Status](https://github.com/yunjuiot/tuyacloud/workflows/CI/badge.svg)](https://github.com/yunjuiot/tuyacloud/actions)
 [![Go Report Card](https://goreportcard.com/badge/github.com/gin-gonic/gin)](https://goreportcard.com/report/github.com/yunjuiot/tuyacloud)
 [![Release](https://img.shields.io/github/release/yunjuiot/tuyacloud.svg?style=flat-square)](https://github.com/yunjuiot/tuyacloud/releases)
 
