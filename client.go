@@ -43,7 +43,8 @@ func (c *Client) Request(r Request) (req *http.Request, err error) {
 	var buf io.Reader
 	if r.Method() != http.MethodGet {
 		i := r.(RequestBody).Body()
-		b, err := json.Marshal(i)
+		var b []byte
+		b, err = json.Marshal(i)
 		if err != nil {
 			return
 		}

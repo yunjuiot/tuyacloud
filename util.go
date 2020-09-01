@@ -16,7 +16,7 @@ func Timestamp() string {
 // HmacSha256 for HMAC-SHA-256 sign.
 func HmacSha256(data, key string) string {
 	h := hmac.New(sha256.New, []byte(key))
-	h.Write([]byte(data))
+	_, _ = h.Write([]byte(data))
 	sha := hex.EncodeToString(h.Sum(nil))
 	return sha
 }
