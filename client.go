@@ -43,6 +43,13 @@ func NewClient(endpoint Endpoint, accessID, accessKey string, opts ...Option) (c
 	return
 }
 
+func (c *Client) isBody(r Request) bool {
+	if r.Method() != http.MethodGet || r.Method() != http.MethodDelete {
+		return true
+	}
+	return false
+}
+
 func (c *Client) Request(r Request) (req *http.Request, err error) {
 	// Check params by go-playground/validator
 	err = c.validator.Struct(r)
@@ -51,7 +58,7 @@ func (c *Client) Request(r Request) (req *http.Request, err error) {
 	}
 	target := c.endpoint + r.URI()
 	var buf io.Reader
-	if r.Method() != http.MethodGet {
+	if c.isBody(r) {
 		i := r.(RequestBody).Body()
 		var b []byte
 		b, err = json.Marshal(i)
@@ -81,7 +88,7 @@ func (c *Client) Request(r Request) (req *http.Request, err error) {
 	req.Header.Add("client_id", c.accessID)
 	req.Header.Add("sign_method", "HMAC-SHA256")
 	req.Header.Add("t", timestamp)
-	if r.Method() != http.MethodGet {
+	if c.isBody(r) {
 		req.Header.Add("Content-Type", "application/json")
 	}
 	return
