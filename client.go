@@ -44,7 +44,7 @@ func NewClient(endpoint Endpoint, accessID, accessKey string, opts ...Option) (c
 }
 
 func (c *Client) isBody(r Request) bool {
-	if r.Method() != http.MethodGet || r.Method() != http.MethodDelete {
+	if r.Method() != http.MethodGet && r.Method() != http.MethodDelete {
 		return true
 	}
 	return false
