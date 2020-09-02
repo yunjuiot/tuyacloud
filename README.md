@@ -24,11 +24,11 @@ Project is __under active development__, API may changes in futures.
     - [ ] Scene Automation
     - [ ] Data Service
     - [ ] Weather Service
-    - [ ] Device Management
+    - [x] Device Management
     - [ ] OTA
     - [ ] Device Group
     - [ ] Universal Infrared
-    - [ ] Smart Door Lock
+    - [x] Smart Door Lock
     - [ ] Body Fat Scale
     - [ ] Sleep pace
     - [ ] IPC

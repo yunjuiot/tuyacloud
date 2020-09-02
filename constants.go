@@ -1,6 +1,10 @@
 package tuyacloud
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
 
 type Endpoint string
 
@@ -15,6 +19,11 @@ const (
 	APIEndpointIN Endpoint = "https://openapi.tuyain.com"
 )
 
+// HTTPClient interface.
+type HTTPClient interface{
+	Do(*http.Request) (*http.Response, error)
+}
+
 // Request for API call.
 type Request interface {
 	Method() string
@@ -26,14 +35,24 @@ type RequestBody interface {
 }
 
 type Response struct {
-	Success bool            `json:"success"`
-	Code    int             `json:"code"`
-	Msg     string          `json:"msg"`
-	Result  json.RawMessage `json:"result"`
+	Success   bool            `json:"success"`
+	Code      int             `json:"code"`
+	Msg       string          `json:"msg"`
+	Timestamp int64           `json:"t"`
+	Result    json.RawMessage `json:"result"`
 }
 
 // TokenStorage stores token.
 type TokenStorage interface {
 	Token() string
 	Refresh(c *Client) error
+}
+
+type Error struct {
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
+}
+
+func (e *Error) Error() string {
+	return fmt.Sprintf("%d: %s", e.Code, e.Msg)
 }

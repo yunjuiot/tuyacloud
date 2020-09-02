@@ -1,28 +1,26 @@
 package tuyacloud
 
 import (
-	"net/http"
-
 	"github.com/go-log/log"
 )
 
 type options struct {
-	httpClient *http.Client
+	httpClient HTTPClient
 	logger     log.Logger
 	storage    TokenStorage
 }
 
 type Option func(o *options)
 
-// HTTPClient setup HTTPClient
-func HTTPClient(c *http.Client) Option {
+// WithHTTPClient setup HTTPClient
+func WithHTTPClient(c HTTPClient) Option {
 	return func(o *options) {
 		o.httpClient = c
 	}
 }
 
-// Logger setup log.Logger interface.
-func Logger(l log.Logger) Option {
+// WithLogger setup log.Logger interface.
+func WithLogger(l log.Logger) Option {
 	return func(o *options) {
 		o.logger = l
 	}

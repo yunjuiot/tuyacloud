@@ -4,11 +4,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"strings"
 	"time"
 
 	"github.com/go-log/log"
+	"github.com/go-playground/validator/v10"
+	"github.com/pkg/errors"
 )
 
 type Client struct {
@@ -16,9 +19,10 @@ type Client struct {
 	accessID  string
 	accessKey string
 
-	httpClient *http.Client
+	httpClient HTTPClient
 	logger     log.Logger
 	storage    TokenStorage
+	validator  *validator.Validate
 }
 
 // NewClient returns API client.
@@ -35,11 +39,17 @@ func NewClient(endpoint Endpoint, accessID, accessKey string, opts ...Option) (c
 	c.httpClient = conf.httpClient
 	c.logger = conf.logger
 	c.storage = conf.storage
+	c.validator = validator.New()
 	return
 }
 
 func (c *Client) Request(r Request) (req *http.Request, err error) {
-	target := c.endpoint + "/" + r.URI()
+	// Check params by go-playground/validator
+	err = c.validator.Struct(r)
+	if err != nil {
+		return
+	}
+	target := c.endpoint + r.URI()
 	var buf io.Reader
 	if r.Method() != http.MethodGet {
 		i := r.(RequestBody).Body()
@@ -51,20 +61,24 @@ func (c *Client) Request(r Request) (req *http.Request, err error) {
 		buf = bytes.NewReader(b)
 	}
 
+	c.logger.Logf("%s %s", r.Method(), target)
 	req, err = http.NewRequest(r.Method(), target, buf)
 	if err != nil {
 		return
 	}
-	var token string
-	token, err = c.Token()
-	if err != nil {
-		return
-	}
 	timestamp := Timestamp()
-	sign := c.PlainSign(timestamp)
+	// TODO: dirty hack for infinity loop
+	if !strings.Contains(r.URI(), "/v1.0/token") {
+		var token string
+		token, err = c.Token()
+		if err != nil {
+			return
+		}
+		sign := c.TokenSign(token, timestamp)
+		req.Header.Add("access_token", token)
+		req.Header.Add("sign", sign)
+	}
 	req.Header.Add("client_id", c.accessID)
-	req.Header.Add("access_token", token)
-	req.Header.Add("sign", sign)
 	req.Header.Add("sign_method", "HMAC-SHA256")
 	req.Header.Add("t", timestamp)
 	if r.Method() != http.MethodGet {
@@ -76,14 +90,22 @@ func (c *Client) Request(r Request) (req *http.Request, err error) {
 func (c *Client) Parse(res *http.Response, resp interface{}) error {
 	defer res.Body.Close()
 	var body Response
-	err := json.NewDecoder(res.Body).Decode(&body)
+	b, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return err
+	}
+	c.logger.Logf("Recv: %s", string(b))
+	err = json.Unmarshal(b, &body)
+	if err != nil {
+		return err
+	}
+	if !body.Success {
+		return errors.Wrap(&Error{
+			Code: body.Code,
+			Msg:  body.Msg,
+		}, "call failed")
 	}
 	err = json.Unmarshal(body.Result, resp)
-	if err != nil {
-		return err
-	}
 	return err
 }
 
