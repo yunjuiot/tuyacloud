@@ -14,7 +14,7 @@ func (t *TokenRequest) SetRefresh(token string) {
 	t.refresh = token
 }
 
-func (t *TokenRequest) URI() string {
+func (t *TokenRequest) URL() string {
 	uri := "/v1.0/token"
 	if t.refresh != "" {
 		uri += "/" + t.refresh

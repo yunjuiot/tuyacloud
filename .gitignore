@@ -18,3 +18,6 @@
 
 # skip Real API Call test.
 *_call_test.go
+
+# Disable dirty work upload.
+cmd/

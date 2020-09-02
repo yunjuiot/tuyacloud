@@ -16,8 +16,8 @@ func (q *QueryDeviceDetailRequest) Method() string {
 	return http.MethodGet
 }
 
-// URI for Request.URI()
-func (q *QueryDeviceDetailRequest) URI() string {
+// URL for Request.URL()
+func (q *QueryDeviceDetailRequest) URL() string {
 	return "/v1.0/devices/" + q.DeviceID
 }
 
@@ -45,8 +45,8 @@ func (q *QueryUserDevicesRequest) Method() string {
 	return http.MethodGet
 }
 
-// URI for Request.URI()
-func (q *QueryUserDevicesRequest) URI() string {
+// URL for Request.URL()
+func (q *QueryUserDevicesRequest) URL() string {
 	return "/v1.0/users/" + q.UID + "/devices"
 }
 
@@ -90,8 +90,8 @@ func (q *QueryDevicesRequest) Method() string {
 	return http.MethodGet
 }
 
-// URI for Request.URI()
-func (q *QueryDevicesRequest) URI() string {
+// URL for Request.URL()
+func (q *QueryDevicesRequest) URL() string {
 	v, _ := query.Values(q)
 	return "/v1.0/devices?" + v.Encode()
 }
@@ -115,8 +115,8 @@ func (u *UpdateFunctionPointNameRequest) Method() string {
 	return http.MethodPut
 }
 
-// URI for Request.URI()
-func (u *UpdateFunctionPointNameRequest) URI() string {
+// URL for Request.URL()
+func (u *UpdateFunctionPointNameRequest) URL() string {
 	return "/v1.0/devices/" + u.DeviceID + "/functions/" + u.FunctionCode
 }
 
@@ -143,8 +143,8 @@ func (q *QueryLogsRequest) Method() string {
 	return http.MethodGet
 }
 
-// URI for Request.URI()
-func (q *QueryLogsRequest) URI() string {
+// URL for Request.URL()
+func (q *QueryLogsRequest) URL() string {
 	v, _ := query.Values(q)
 	return "/v1.0/devices/" + q.DeviceID + "/logs?" + v.Encode()
 }
@@ -177,8 +177,8 @@ func (r *RestoreFactorySettingsRequest) Method() string {
 	return http.MethodPut
 }
 
-// URI for Request.URI()
-func (r *RestoreFactorySettingsRequest) URI() string {
+// URL for Request.URL()
+func (r *RestoreFactorySettingsRequest) URL() string {
 	return "/v1.0/devices/{device_id}/reset-factory"
 }
 
@@ -195,8 +195,8 @@ func (d *DeleteDeviceRequest) Method() string {
 	return http.MethodDelete
 }
 
-// URI for Request.URI()
-func (d *DeleteDeviceRequest) URI() string {
+// URL for Request.URL()
+func (d *DeleteDeviceRequest) URL() string {
 	return "/v1.0/devices/" + d.DeviceID
 }
 
@@ -213,8 +213,8 @@ func (q *QuerySubDevicesRequest) Method() string {
 	return http.MethodGet
 }
 
-// URI for Request.URI()
-func (q *QuerySubDevicesRequest) URI() string {
+// URL for Request.URL()
+func (q *QuerySubDevicesRequest) URL() string {
 	return "/v1.0/devices/" + q.DeviceID + "/sub-devices"
 }
 
@@ -243,8 +243,8 @@ func (q *QueryFactoryInfoRequest) Method() string {
 	return http.MethodGet
 }
 
-// URI for Request.URI()
-func (q *QueryFactoryInfoRequest) URI() string {
+// URL for Request.URL()
+func (q *QueryFactoryInfoRequest) URL() string {
 	v, _ := query.Values(q)
 	return "/v1.0/devices/factory-infos?" + v.Encode()
 }

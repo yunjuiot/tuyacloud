@@ -27,7 +27,7 @@ type HTTPClient interface{
 // Request for API call.
 type Request interface {
 	Method() string
-	URI() string
+	URL() string
 }
 
 type RequestBody interface {

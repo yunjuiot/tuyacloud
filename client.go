@@ -56,7 +56,7 @@ func (c *Client) Request(r Request) (req *http.Request, err error) {
 	if err != nil {
 		return
 	}
-	target := c.endpoint + r.URI()
+	target := c.endpoint + r.URL()
 	var buf io.Reader
 	if c.isBody(r) {
 		i := r.(RequestBody).Body()
@@ -75,7 +75,7 @@ func (c *Client) Request(r Request) (req *http.Request, err error) {
 	}
 	timestamp := Timestamp()
 	// TODO: dirty hack for infinity loop
-	if !strings.Contains(r.URI(), "/v1.0/token") {
+	if !strings.Contains(r.URL(), "/v1.0/token") {
 		var token string
 		token, err = c.Token()
 		if err != nil {

@@ -22,8 +22,8 @@ func (c *CreateTempPwdRequest) Method() string {
 	return http.MethodPost
 }
 
-// URI for Request.URI()
-func (c *CreateTempPwdRequest) URI() string {
+// URL for Request.URL()
+func (c *CreateTempPwdRequest) URL() string {
 	return "/v1.0/devices/" + c.DeviceID + "/door-lock/temp-password"
 }
 
@@ -42,8 +42,8 @@ func (d *DynamicPwdRequest) Method() string {
 	return http.MethodGet
 }
 
-// URI for Request.URI()
-func (d *DynamicPwdRequest) URI() string {
+// URL for Request.URL()
+func (d *DynamicPwdRequest) URL() string {
 	return "/v1.0/devices/" + d.DeviceID + "/door-lock/dynamic-password"
 }
 
@@ -63,8 +63,8 @@ func (q *QueryTempPwdRequest) Method() string {
 	return http.MethodGet
 }
 
-// URI for Request.URI()
-func (q *QueryTempPwdRequest) URI() string {
+// URL for Request.URL()
+func (q *QueryTempPwdRequest) URL() string {
 	return fmt.Sprintf("/v1.0/devices/%s/door-lock/temp-passwords/%d", q.DeviceID, q.PasswordID)
 }
 
@@ -102,8 +102,8 @@ func (q *QueryTempPwdListRequest) Method() string {
 	return http.MethodGet
 }
 
-// URI for Request.URI()
-func (q *QueryTempPwdListRequest) URI() string {
+// URL for Request.URL()
+func (q *QueryTempPwdListRequest) URL() string {
 	return "/v1.0/devices/" + q.DeviceID + "/door-lock/temp-passwords"
 }
 
@@ -127,8 +127,8 @@ func (u *UpdateTempPwdRequest) Method() string {
 	return http.MethodPut
 }
 
-// URI for Request.URI()
-func (u *UpdateTempPwdRequest) URI() string {
+// URL for Request.URL()
+func (u *UpdateTempPwdRequest) URL() string {
 	return fmt.Sprintf("/v1.0/devices/%s/door-lock/temp-passwords/%d/modify-password", u.DeviceID, u.PasswordID)
 }
 
@@ -146,8 +146,8 @@ func (d *DeleteTempPwdRequest) Method() string {
 	return http.MethodDelete
 }
 
-// URI for Request.URI()
-func (d *DeleteTempPwdRequest) URI() string {
+// URL for Request.URL()
+func (d *DeleteTempPwdRequest) URL() string {
 	return fmt.Sprintf("/v1.0/devices/%s/door-lock/temp-passwords/%d/modify-password", d.DeviceID, d.PasswordID)
 }
 
@@ -169,8 +169,8 @@ func (q *QueryOpenLogsRequest) Method() string {
 	return http.MethodGet
 }
 
-// URI for Request.URI()
-func (q *QueryOpenLogsRequest) URI() string {
+// URL for Request.URL()
+func (q *QueryOpenLogsRequest) URL() string {
 	u, _ := query.Values(q)
 	return "/v1.0/devices/" + q.DeviceID + "/door-lock/open-logs?" + u.Encode()
 }
@@ -202,8 +202,8 @@ func (i *IssuePasswordRequest) Method() string {
 	return http.MethodGet
 }
 
-// URI for Request.URI()
-func (i *IssuePasswordRequest) URI() string {
+// URL for Request.URL()
+func (i *IssuePasswordRequest) URL() string {
 	return "/v1.0/devices/" + i.DeviceID + "/door-lock/issue-password"
 }
 
