@@ -18,7 +18,7 @@ Project is __under active development__, API may changes in futures.
 - [x] Go-style API design.
 - [ ] Full Feature support.
     - [x] Authorization Management
-    - [ ] User Management
+    - [x] User Management
     - [ ] Pair Device Management
     - [ ] Device Control
     - [ ] Device Timing Management
