@@ -10,7 +10,7 @@ type RequestExtension struct {
 	UUID string `url:"-" json:"uuid"`
 }
 
-type PairingDeviceRequest struct {
+type DeviceRequest struct {
 	ParingType string           `url:"-" validate:"required" json:"paring_type"`  // paring type,support BLE, AP, EZ
 	UID        string           `url:"-" validate:"required" json:"uid"`          // Tuya user id
 	TimeZoneID string           `url:"-" validate:"required" json:"time_zone_id"` // User's time zone id, device needs for daylight saving time
@@ -19,12 +19,12 @@ type PairingDeviceRequest struct {
 }
 
 // Method for Request.Method()
-func (s *PairingDeviceRequest) Method() string {
+func (s *DeviceRequest) Method() string {
 	return http.MethodPost
 }
 
 // URL for Request.URL()
-func (s *PairingDeviceRequest) URL() string {
+func (s *DeviceRequest) URL() string {
 	return "/v1.0/device/paring/token"
 }
 
@@ -33,7 +33,7 @@ type ResponseExtension struct {
 	Random     string `json:"random"`      // Encrypted string
 }
 
-type PairingDeviceResponse struct {
+type DeviceResponse struct {
 	ExpireTime int64             `json:"expire_time"` // Token expiration time
 	Region     string            `json:"region"`      // Current region, support:AY EU US
 	Token      string            `json:"token"`       // paring token
@@ -136,6 +136,6 @@ type ZigbeeGatewayPairedListResponse struct {
 	Online     bool   `json:"online"`      // Device online state
 	Name       string `json:"name"`        // Device name
 	UpdateTime int64  `json:"update_time"` // Update time
-	ActiveTime int64  `json:"active_time"` // Last actice time
+	ActiveTime int64  `json:"active_time"` // Last active time
 	Category   string `json:"category"`    // Category
 }
