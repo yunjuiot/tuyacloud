@@ -20,7 +20,7 @@ Project is __under active development__, API may changes in futures.
     - [x] Authorization Management
     - [x] User Management
     - [x] Pair Device Management
-    - [ ] Device Control
+    - [x] Device Control
     - [ ] Device Timing Management
     - [ ] Smart Home Management
     - [ ] Scene Automation
