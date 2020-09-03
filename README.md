@@ -19,7 +19,7 @@ Project is __under active development__, API may changes in futures.
 - [ ] Full Feature support.
     - [x] Authorization Management
     - [x] User Management
-    - [ ] Pair Device Management
+    - [x] Pair Device Management
     - [ ] Device Control
     - [ ] Device Timing Management
     - [ ] Smart Home Management
