@@ -22,7 +22,7 @@ Project is __under active development__, API may changes in futures.
     - [x] Pair Device Management
     - [x] Device Control
     - [ ] Device Timing Management
-    - [ ] Smart Home Management
+    - [x] Smart Home Management
     - [ ] Scene Automation
     - [ ] Data Service
     - [ ] Weather Service
@@ -40,3 +40,18 @@ Project is __under active development__, API may changes in futures.
 ```console
 go get github.com/yunjuiot/tuyacloud
 ```
+
+## Contribute
+
+Use issues for everything
+   
+ * For a small change, just send a PR.
+ * For bigger changes open an issue for discussion before sending a PR.
+ * PR should have:
+   * Test case
+   * Documentation
+   * Example (If it makes sense)
+ * You can also contribute by:
+   * Reporting issues
+   * Suggesting new features or enhancements
+   * Improve/fix documentation
