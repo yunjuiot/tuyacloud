@@ -1,7 +1,7 @@
 // Package device implements Device Management API interface.
 package device
 
-// Implemented Functional:
+// Implemented:
 // GET		/v1.0/devices/{device_id}							Get device details
 // GET		/v1.0/users/{uid}/devices							Get the list of devices under the user
 // GET		/v1.0/devices										Get device list
