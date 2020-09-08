@@ -44,6 +44,10 @@ func NewClient(endpoint Endpoint, accessID, accessKey string, opts ...Option) (c
 }
 
 func (c *Client) isBody(r Request) bool {
+	// WTF: Some cases uploads body with http.MethodDelete
+	if _, ok := r.(RequestBody); ok {
+		return true
+	}
 	if r.Method() != http.MethodGet && r.Method() != http.MethodDelete {
 		return true
 	}
