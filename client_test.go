@@ -5,8 +5,10 @@ import (
 	"os"
 	"testing"
 
+	"github.com/go-log/log/log"
 	"github.com/stretchr/testify/require"
 	"github.com/yunjuiot/tuyacloud"
+	"github.com/yunjuiot/tuyacloud/user"
 )
 
 func TestNewClient(t *testing.T) {
@@ -87,4 +89,22 @@ func TestClient_PlainSign(t *testing.T) {
 			},
 		)
 	}
+}
+
+func ExampleClient() {
+	client := tuyacloud.NewClient(
+		tuyacloud.APIEndpointUS,
+		"1KAD46OrT9HafiKdsXeg",
+		"4OHBOnWOqaEC1mWXOpVL3yV50s0qGSRC",
+		tuyacloud.WithLogger(log.New()),
+	)
+	req := &user.QueryUserInfoRequest{
+		UID: "123456",
+	}
+	var info user.QueryUserInfoResponse
+	err := client.DoAndParse(req, &info)
+	if err != nil {
+		panic(err)
+	}
+	// Blah Blah Blah...
 }
