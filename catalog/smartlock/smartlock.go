@@ -32,26 +32,6 @@ type CreateTempPwdResponse struct {
 	ID int64 `json:"id"`
 }
 
-// DynamicPwdRequest request to a dynamic password
-type DynamicPwdRequest struct {
-	DeviceID string `json:"device_id" validate:"required"`
-}
-
-// Method for Request.Method()
-func (d *DynamicPwdRequest) Method() string {
-	return http.MethodGet
-}
-
-// URL for Request.URL()
-func (d *DynamicPwdRequest) URL() string {
-	return "/v1.0/devices/" + d.DeviceID + "/door-lock/dynamic-password"
-}
-
-// DynamicPwdResponse returns a dynamic password
-type DynamicPwdResponse struct {
-	DynamicPassword string `json:"dynamic_password"`
-}
-
 // QueryTempPwdRequest returns temp passwords info.
 type QueryTempPwdRequest struct {
 	DeviceID   string `json:"device_id" validate:"required"`
@@ -153,6 +133,62 @@ func (d *DeleteTempPwdRequest) URL() string {
 
 // DeleteTempPwdResponse show success or not.
 type DeleteTempPwdResponse bool
+
+// DynamicPwdRequest request to a dynamic password
+type DynamicPwdRequest struct {
+	DeviceID string `json:"device_id" validate:"required"`
+}
+
+// Method for Request.Method()
+func (d *DynamicPwdRequest) Method() string {
+	return http.MethodGet
+}
+
+// URL for Request.URL()
+func (d *DynamicPwdRequest) URL() string {
+	return "/v1.0/devices/" + d.DeviceID + "/door-lock/dynamic-password"
+}
+
+// DynamicPwdResponse returns a dynamic password
+type DynamicPwdResponse struct {
+	DynamicPassword string `json:"dynamic_password"`
+}
+
+const (
+	OfflineTempPwdTypeMultiTime = 0
+	OfflineTempPwdTypeOneTime   = 1
+	OfflineTempPwdTClean        = 9
+)
+
+// OfflineTempPwdRequest request to a offline temp password
+type OfflineTempPwdRequest struct {
+	DeviceID string `json:"-" validate:"required"`
+
+	EffectiveTime int64    `json:"effective_time" validate:"required"`
+	InvalidTime   int64    `json:"invalid_time" validate:"required"`
+	Name          string `json:"name"`
+	Type          int    `json:"type"`
+	Lang          string `json:"lang" validate:"required"`
+}
+
+func (d *OfflineTempPwdRequest) Body() interface{} {
+	return d
+}
+
+// Method for Request.Method()
+func (d *OfflineTempPwdRequest) Method() string {
+	return http.MethodPost
+}
+
+// URL for Request.URL()
+func (d *OfflineTempPwdRequest) URL() string {
+	return "/v1.0/devices/" + d.DeviceID + "/door-lock/offline-temp-password"
+}
+
+// OfflineTempPwdResponse returns a offline temp password
+type OfflineTempPwdResponse struct {
+	OfflineTempPassword string `json:"offline_temp_password"`
+}
 
 // QueryOpenLogsRequest returns a list of logs.
 type QueryOpenLogsRequest struct {

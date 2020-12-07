@@ -7,13 +7,13 @@ import (
 	"github.com/yunjuiot/tuyacloud"
 )
 
-var (
-	client *tuyacloud.Client
-	r tuyacloud.Request
-	err error
-)
-
 func ExampleError() {
+	var (
+		client *tuyacloud.Client
+		r      tuyacloud.Request
+		err    error
+	)
+
 	m := map[string]interface{}{}
 	err = client.DoAndParse(r, &m)
 	if err != nil {

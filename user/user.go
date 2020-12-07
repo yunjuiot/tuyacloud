@@ -16,6 +16,10 @@ type SyncUserInfoRequest struct {
 	NickName     string `url:"-" json:"nick_name,omitempty"`               // nickname
 }
 
+func (s *SyncUserInfoRequest) Body() interface{} {
+	return s
+}
+
 // Method for Request.Method()
 func (s *SyncUserInfoRequest) Method() string {
 	return http.MethodPost
@@ -35,6 +39,10 @@ type QueryUserListRequest struct {
 	Schema   string `url:"-" validate:"required" json:"-"`         // App schema
 	PageNo   int    `url:"page_no" validate:"required" json:"-"`   // Page no
 	PageSize int    `url:"page_size" validate:"required" json:"-"` // Page size, value range (0, 100]
+}
+
+func (s *QueryUserListRequest) Body() interface{} {
+	return s
 }
 
 // Method for Request.Method()
@@ -63,6 +71,10 @@ type QueryUserListResponse struct {
 // QueryUserInfoRequest for get user information
 type QueryUserInfoRequest struct {
 	UID string `url:"-" validate:"required" json:"-"` // user id
+}
+
+func (s *QueryUserInfoRequest) Body() interface{} {
+	return s
 }
 
 // Method for Request.Method()
