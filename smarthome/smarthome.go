@@ -18,6 +18,10 @@ type AddHomeRequest struct {
 	Rooms []string `url:"-" json:"rooms,omitempty"`          // Room list
 }
 
+func (s *AddHomeRequest) Body() interface{} {
+	return s
+}
+
 // Method for Request.Method()
 func (s *AddHomeRequest) Method() string {
 	return http.MethodPost
@@ -38,6 +42,10 @@ type UpdateHomeRequest struct {
 	Latitude  float32 `url:"-" json:"lat,omitempty"`         // Latitude
 }
 
+func (s *UpdateHomeRequest) Body() interface{} {
+	return s
+}
+
 // Method for Request.Method()
 func (s *UpdateHomeRequest) Method() string {
 	return http.MethodPut
@@ -52,6 +60,10 @@ type UpdateHomeResponse bool
 
 type QueryHomeRequest struct {
 	HomeID int64 `url:"-" validate:"required" json:"-"` // Family ID
+}
+
+func (s *QueryHomeRequest) Body() interface{} {
+	return s
 }
 
 // Method for Request.Method()
@@ -76,6 +88,10 @@ type DeleteHomeRequest struct {
 	HomeID int64 `url:"-" validate:"required" json:"-"` // Family id
 }
 
+func (s *DeleteHomeRequest) Body() interface{} {
+	return s
+}
+
 // Method for Request.Method()
 func (s *DeleteHomeRequest) Method() string {
 	return http.MethodDelete
@@ -90,6 +106,10 @@ type DeleteHomeResponse bool
 
 type QueryHomeDeviceRequest struct {
 	HomeID int64 `url:"-" validate:"required" json:"-"` // Family id
+}
+
+func (s *QueryHomeDeviceRequest) Body() interface{} {
+	return s
 }
 
 // Method for Request.Method()
@@ -128,6 +148,10 @@ type AddRoomRequest struct {
 	Name   string `url:"-" validate:"required" json:"name"` // Room name
 }
 
+func (s *AddRoomRequest) Body() interface{} {
+	return s
+}
+
 // Method for Request.Method()
 func (s *AddRoomRequest) Method() string {
 	return http.MethodPost
@@ -144,6 +168,10 @@ type UpdateRoomRequest struct {
 	HomeID int64  `url:"-" validate:"required" json:"-"`    // Family ID
 	RoomID int64  `url:"-" validate:"required" json:"-"`    // Room ID
 	Name   string `url:"-" validate:"required" json:"name"` // Room name
+}
+
+func (s *UpdateRoomRequest) Body() interface{} {
+	return s
 }
 
 // Method for Request.Method()
@@ -163,6 +191,10 @@ type DeleteRoomRequest struct {
 	RoomID int64 `url:"-" validate:"required" json:"-"` // Room id
 }
 
+func (s *DeleteRoomRequest) Body() interface{} {
+	return s
+}
+
 // Method for Request.Method()
 func (s *DeleteRoomRequest) Method() string {
 	return http.MethodDelete
@@ -177,6 +209,10 @@ type DeleteRoomResponse bool
 
 type QueryRoomInfoRequest struct {
 	HomeID int64 `url:"-" validate:"required" json:"-"` // Family id
+}
+
+func (s *QueryRoomInfoRequest) Body() interface{} {
+	return s
 }
 
 // Method for Request.Method()
@@ -216,6 +252,10 @@ type AddHomeMemberRequest struct {
 	Member    Member `url:"-" validate:"required" json:"member"`     // Member object
 }
 
+func (s *AddHomeMemberRequest) Body() interface{} {
+	return s
+}
+
 // Method for Request.Method()
 func (s *AddHomeMemberRequest) Method() string {
 	return http.MethodPost
@@ -232,6 +272,10 @@ type UpdateHomeMemberPermissionRequest struct {
 	HomeID int64  `url:"-" validate:"required" json:"-"`     // Family id
 	UID    string `url:"-" validate:"required" json:"-"`     // User ID in tuya
 	Admin  bool   `url:"-" validate:"required" json:"admin"` // The home administrator indicates, true is the administrator and false is not the administrator.
+}
+
+func (s *UpdateHomeMemberPermissionRequest) Body() interface{} {
+	return s
 }
 
 // Method for Request.Method()
@@ -251,6 +295,10 @@ type DeleteHomeMemberRequest struct {
 	UID    string `url:"-" validate:"required" json:"-"` // User ID in tuya
 }
 
+func (s *DeleteHomeMemberRequest) Body() interface{} {
+	return s
+}
+
 // Method for Request.Method()
 func (s *DeleteHomeMemberRequest) Method() string {
 	return http.MethodDelete
@@ -265,6 +313,10 @@ type DeleteHomeMemberResponse bool
 
 type QueryHomeMembersRequest struct {
 	HomeID int64 `url:"-" validate:"required" json:"-"` // family id
+}
+
+func (s *QueryHomeMembersRequest) Body() interface{} {
+	return s
 }
 
 // Method for Request.Method()
@@ -282,6 +334,10 @@ type QueryHomeMembersResponse []Member
 type QueryHomeRoomDeviceRequest struct {
 	HomeID int64 `url:"-" validate:"required" json:"-"` // Family ID
 	RoomID int64 `url:"-" validate:"required" json:"-"` // Room ID
+}
+
+func (s *QueryHomeRoomDeviceRequest) Body() interface{} {
+	return s
 }
 
 // Method for Request.Method()
@@ -318,6 +374,10 @@ type AddHomeRoomDeviceRequest struct {
 	DeviceIDs []string `url:"-" validate:"required" json:"device_ids"` // device IDs
 }
 
+func (s *AddHomeRoomDeviceRequest) Body() interface{} {
+	return s
+}
+
 // Method for Request.Method()
 func (s *AddHomeRoomDeviceRequest) Method() string {
 	return http.MethodPost
@@ -336,6 +396,10 @@ type UpdateHomeRoomDeviceRequest struct {
 	DeviceIDs []string `url:"-" validate:"required" json:"device_ids"` // device IDs
 }
 
+func (s *UpdateHomeRoomDeviceRequest) Body() interface{} {
+	return s
+}
+
 // Method for Request.Method()
 func (s *UpdateHomeRoomDeviceRequest) Method() string {
 	return http.MethodPut
@@ -352,6 +416,10 @@ type DeleteHomeRoomDeviceRequest struct {
 	HomeID    int64    `url:"-" validate:"required" json:"-"`          // home ID
 	RoomID    int64    `url:"-" validate:"required" json:"-"`          // room ID
 	DeviceIDs []string `url:"-" validate:"required" json:"device_ids"` // devices ID
+}
+
+func (s *DeleteHomeRoomDeviceRequest) Body() interface{} {
+	return s
 }
 
 // Method for Request.Method()
