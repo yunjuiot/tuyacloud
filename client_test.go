@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"os"
 	"testing"
+	"time"
 
-	"github.com/go-log/log/log"
 	"github.com/stretchr/testify/require"
+
 	"github.com/yunjuiot/tuyacloud"
 	"github.com/yunjuiot/tuyacloud/user"
 )
@@ -96,7 +97,7 @@ func ExampleClient() {
 		tuyacloud.APIEndpointUS,
 		"1KAD46OrT9HafiKdsXeg",
 		"4OHBOnWOqaEC1mWXOpVL3yV50s0qGSRC",
-		tuyacloud.WithLogger(log.New()),
+		//tuyacloud.WithLogger(log.New()),
 	)
 	req := &user.QueryUserInfoRequest{
 		UID: "123456",
@@ -107,4 +108,37 @@ func ExampleClient() {
 		panic(err)
 	}
 	// Blah Blah Blah...
+}
+
+func TestClient_autoRefreshToken(t *testing.T) {
+	accessID := os.Getenv("ACCESSID")
+	accessKey := os.Getenv("ACCESSKEY")
+	if accessID == "" || accessKey == "" {
+		t.SkipNow()
+		return
+	}
+	client := tuyacloud.NewClient(tuyacloud.APIEndpointCN, accessID, accessKey)
+	token, err := client.Token()
+	require.Nil(t, err)
+	require.NotEmpty(t, token)
+	for i := 0; i < 20; i++ {
+		go func() {
+			token, err := client.Token()
+			require.Nil(t, err)
+			require.NotEmpty(t, token)
+			t.Log(token)
+		}()
+	}
+	time.Sleep(time.Second * 100)
+	token, err = client.Token()
+	if err != nil {
+		t.Error(err)
+	}
+	t.Log(token)
+	time.Sleep(time.Second * 5)
+	token, err = client.Token()
+	if err != nil {
+		t.Error(err)
+	}
+	t.Log(token)
 }

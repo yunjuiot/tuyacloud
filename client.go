@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/go-log/log"
@@ -148,14 +149,33 @@ func (c *Client) TokenSign(token, timestamp string) string {
 	return strings.ToUpper(HmacSha256(c.accessID+token+timestamp, c.accessKey))
 }
 
+var (
+	tokenLock sync.RWMutex
+)
+
+// add token lock
 func (c *Client) Token() (token string, err error) {
-	token = c.storage.Token()
-	if token == "" {
-		err = c.storage.Refresh(c)
-		if err != nil {
-			return
-		}
-		token = c.storage.Token()
+	err = c.autoRefreshToken(time.Second * 30)
+	if err != nil {
+		return
 	}
+	tokenLock.RLock()
+	token = c.storage.Token()
+	tokenLock.RUnlock()
 	return
+}
+
+// token 快过期30秒之前自动刷新,防止token失效
+func (c *Client) autoRefreshToken(d time.Duration) error {
+	if !c.storage.IsExpiresAt(d) {
+		return nil
+	}
+	tokenLock.Lock()
+	defer tokenLock.Unlock()
+	err := c.storage.Refresh(c)
+	if err != nil {
+		c.logger.Logf("Auto Refresh Token Error: %s", err.Error())
+		return err
+	}
+	return nil
 }

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 )
 
 type Endpoint string
@@ -20,7 +21,7 @@ const (
 )
 
 // HTTPClient interface.
-type HTTPClient interface{
+type HTTPClient interface {
 	Do(*http.Request) (*http.Response, error)
 }
 
@@ -46,6 +47,7 @@ type Response struct {
 type TokenStorage interface {
 	Token() string
 	Refresh(c *Client) error
+	IsExpiresAt(d time.Duration) bool
 }
 
 type Error struct {

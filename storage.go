@@ -12,10 +12,17 @@ type MemoryStore struct {
 }
 
 func (s *MemoryStore) Token() string {
-	if time.Now().Before(s.expiresTime) {
-		return s.token
+	//if time.Now().Before(s.expiresTime) {
+	//	return s.token
+	//}
+	return s.token
+}
+
+func (s *MemoryStore) IsExpiresAt(d time.Duration) bool {
+	if s.expiresTime.After(time.Now().Add(d)) {
+		return false
 	}
-	return ""
+	return true
 }
 
 func (s *MemoryStore) Refresh(c *Client) (err error) {
@@ -43,6 +50,7 @@ func (s *MemoryStore) Refresh(c *Client) (err error) {
 	}
 	s.token = body.AccessToken
 	s.refreshToken = body.RefreshToken
-	s.expiresTime = time.Now().Add(time.Duration(body.ExpireTime-600) * time.Second)
+	//s.expiresTime = time.Now().Add(time.Duration(body.ExpireTime-600) * time.Second)
+	s.expiresTime = time.Now().Add(time.Duration(60) * time.Second)
 	return
 }
