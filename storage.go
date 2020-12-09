@@ -50,7 +50,6 @@ func (s *MemoryStore) Refresh(c *Client) (err error) {
 	}
 	s.token = body.AccessToken
 	s.refreshToken = body.RefreshToken
-	//s.expiresTime = time.Now().Add(time.Duration(body.ExpireTime-600) * time.Second)
-	s.expiresTime = time.Now().Add(time.Duration(60) * time.Second)
+	s.expiresTime = time.Now().Add(time.Duration(body.ExpireTime-600) * time.Second)
 	return
 }

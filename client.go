@@ -157,6 +157,7 @@ var (
 func (c *Client) Token() (token string, err error) {
 	err = c.autoRefreshToken(time.Second * 30)
 	if err != nil {
+		c.logger.Logf("Auto Refresh Token Error: %s", err.Error())
 		return
 	}
 	tokenLock.RLock()
@@ -174,7 +175,6 @@ func (c *Client) autoRefreshToken(d time.Duration) error {
 	defer tokenLock.Unlock()
 	err := c.storage.Refresh(c)
 	if err != nil {
-		c.logger.Logf("Auto Refresh Token Error: %s", err.Error())
 		return err
 	}
 	return nil
