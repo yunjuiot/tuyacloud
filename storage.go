@@ -19,10 +19,7 @@ func (s *MemoryStore) Token() string {
 }
 
 func (s *MemoryStore) IsExpiresAt(d time.Duration) bool {
-	if s.expiresTime.After(time.Now().Add(d)) {
-		return false
-	}
-	return true
+	return !s.expiresTime.After(time.Now().Add(d))
 }
 
 func (s *MemoryStore) Refresh(c *Client) (err error) {
