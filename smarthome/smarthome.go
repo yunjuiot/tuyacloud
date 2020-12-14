@@ -431,3 +431,23 @@ func (s *DeleteHomeRoomDeviceRequest) Method() string {
 func (s *DeleteHomeRoomDeviceRequest) URL() string {
 	return fmt.Sprintf("/v1.0/homes/%d/rooms/%d/devices", s.HomeID, s.RoomID)
 }
+
+type QueryUserHomeRequest struct {
+	UID int64 `url:"-" validate:"required" json:"-"` // home ID
+}
+
+func (s *QueryUserHomeRequest) Body() interface{} {
+	return s
+}
+
+// Method for Request.Method()
+func (s *QueryUserHomeRequest) Method() string {
+	return http.MethodGet
+}
+
+// URL for Request.URL()
+func (s *QueryUserHomeRequest) URL() string {
+	return fmt.Sprintf("/v1.0/users/%d/homes", s.UID)
+}
+
+type QueryUserHomeResponse []QueryHomeResponse
