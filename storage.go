@@ -12,6 +12,7 @@ type MemoryStore struct {
 	expiresTime  time.Time
 }
 
+// Token returns valid token.
 func (s *MemoryStore) Token() string {
 	if time.Now().Before(s.expiresTime) {
 		return s.token
@@ -19,6 +20,7 @@ func (s *MemoryStore) Token() string {
 	return ""
 }
 
+// Refresh token
 func (s *MemoryStore) Refresh(c *Client) (err error) {
 	r := &TokenRequest{}
 	if s.refreshToken != "" {
