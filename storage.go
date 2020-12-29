@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// MemoryStore storage.
 type MemoryStore struct {
 	token        string
 	refreshToken string

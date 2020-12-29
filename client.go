@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/go-log/log"
@@ -14,11 +15,13 @@ import (
 	"github.com/pkg/errors"
 )
 
+// Client for tuya cloud.
 type Client struct {
 	endpoint  string
 	accessID  string
 	accessKey string
 
+	lock       sync.Mutex
 	httpClient HTTPClient
 	logger     log.Logger
 	storage    TokenStorage
@@ -54,6 +57,7 @@ func (c *Client) isBody(r Request) bool {
 	return false
 }
 
+// Request to TUYA.
 func (c *Client) Request(r Request) (req *http.Request, err error) {
 	// Check params by go-playground/validator
 	err = c.validator.Struct(r)
@@ -98,6 +102,7 @@ func (c *Client) Request(r Request) (req *http.Request, err error) {
 	return
 }
 
+// Parse response body.
 func (c *Client) Parse(res *http.Response, resp interface{}) error {
 	defer res.Body.Close()
 	var body Response
@@ -120,11 +125,13 @@ func (c *Client) Parse(res *http.Response, resp interface{}) error {
 	return err
 }
 
+// Do send HTTP request.
 func (c *Client) Do(r *http.Request) (res *http.Response, err error) {
 	res, err = c.httpClient.Do(r)
 	return
 }
 
+// DoAndParse = Do + Parse.
 func (c *Client) DoAndParse(r Request, resp interface{}) (err error) {
 	var req *http.Request
 	var res *http.Response
@@ -140,15 +147,20 @@ func (c *Client) DoAndParse(r Request, resp interface{}) (err error) {
 	return
 }
 
+// PlainSign returns sign.
 func (c *Client) PlainSign(timestamp string) string {
 	return strings.ToUpper(HmacSha256(c.accessID+timestamp, c.accessKey))
 }
 
+// TokenSign returns token sign.
 func (c *Client) TokenSign(token, timestamp string) string {
 	return strings.ToUpper(HmacSha256(c.accessID+token+timestamp, c.accessKey))
 }
 
+// Token returns access token.
 func (c *Client) Token() (token string, err error) {
+	c.lock.Lock()
+	defer c.lock.Unlock()
 	token = c.storage.Token()
 	if token == "" {
 		err = c.storage.Refresh(c)

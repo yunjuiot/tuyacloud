@@ -9,6 +9,7 @@ import (
 
 	"github.com/go-log/log/log"
 	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/require"
 	"github.com/yunjuiot/tuyacloud"
 	"github.com/yunjuiot/tuyacloud/tests/helpers"
 )
@@ -27,6 +28,7 @@ func NewClient(t *testing.T) (client *tuyacloud.Client) {
 	if token != "" {
 		store = helpers.NewStaticStore(token)
 	}
+	require.NotEmpty(t, token, "Access Token is empty.")
 	client = tuyacloud.NewClient(
 		tuyacloud.APIEndpointCN, id, key, tuyacloud.WithTokenStore(store),
 		tuyacloud.WithLogger(log.New()),
