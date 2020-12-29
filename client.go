@@ -10,6 +10,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/cenkalti/backoff/v4"
 	"github.com/go-log/log"
 	"github.com/go-playground/validator/v10"
 	"github.com/pkg/errors"
@@ -26,6 +27,7 @@ type Client struct {
 	logger     log.Logger
 	storage    TokenStorage
 	validator  *validator.Validate
+	maxRetires uint64
 }
 
 // NewClient returns API client.
@@ -35,6 +37,7 @@ func NewClient(endpoint Endpoint, accessID, accessKey string, opts ...Option) (c
 		httpClient: &http.Client{Timeout: 10 * time.Second},
 		logger:     log.DefaultLogger,
 		storage:    &MemoryStore{},
+		maxRetires: 5,
 	}
 	for _, opt := range opts {
 		opt(conf)
@@ -43,6 +46,7 @@ func NewClient(endpoint Endpoint, accessID, accessKey string, opts ...Option) (c
 	c.logger = conf.logger
 	c.storage = conf.storage
 	c.validator = validator.New()
+	c.maxRetires = conf.maxRetires
 	return
 }
 
@@ -127,7 +131,12 @@ func (c *Client) Parse(res *http.Response, resp interface{}) error {
 
 // Do send HTTP request.
 func (c *Client) Do(r *http.Request) (res *http.Response, err error) {
-	res, err = c.httpClient.Do(r)
+	// ExponentialBackOff support.
+	err = backoff.Retry(func() error {
+		var e error
+		res, e = c.httpClient.Do(r)
+		return e
+	}, backoff.WithMaxRetries(backoff.NewExponentialBackOff(), c.maxRetires))
 	return
 }
 

@@ -8,6 +8,7 @@ type options struct {
 	httpClient HTTPClient
 	logger     log.Logger
 	storage    TokenStorage
+	maxRetires uint64
 }
 
 // Option settings.
@@ -31,5 +32,13 @@ func WithLogger(l log.Logger) Option {
 func WithTokenStore(s TokenStorage) Option {
 	return func(o *options) {
 		o.storage = s
+	}
+}
+
+// WithMaxRetries setup max retries.
+// Disable retries when i == 0.
+func WithMaxRetries(i uint64) Option {
+	return func(o *options) {
+		o.maxRetires = i
 	}
 }
