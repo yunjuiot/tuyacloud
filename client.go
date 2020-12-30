@@ -120,6 +120,12 @@ func (c *Client) Parse(res *http.Response, resp interface{}) error {
 		return err
 	}
 	if !body.Success {
+		// compensation mechanism for refresh token
+		if body.Code == 1010 || body.Code == 1011 {
+			c.lock.Lock()
+			c.storage.Refresh(c)
+			c.lock.Unlock()
+		}
 		return errors.Wrap(&Error{
 			Code: body.Code,
 			Msg:  body.Msg,
