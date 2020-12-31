@@ -124,7 +124,7 @@ func (c *Client) Parse(res *http.Response, resp interface{}) error {
 		// e.g. tuya restarts its server all token will expires right now.
 		if body.Code == 1010 || body.Code == 1011 {
 			c.lock.Lock()
-			c.storage.Refresh(c)
+			_ = c.storage.Refresh(c)
 			c.lock.Unlock()
 		}
 		return errors.Wrap(&Error{
