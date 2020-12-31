@@ -120,7 +120,8 @@ func (c *Client) Parse(res *http.Response, resp interface{}) error {
 		return err
 	}
 	if !body.Success {
-		// compensation mechanism for refresh token
+		// compensation mechanism for token invalid.
+		// e.g. tuya restarts its server all token will expires right now.
 		if body.Code == 1010 || body.Code == 1011 {
 			c.lock.Lock()
 			c.storage.Refresh(c)
