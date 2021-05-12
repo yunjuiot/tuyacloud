@@ -6,6 +6,7 @@ import (
 	"net/http"
 )
 
+// Endpoint for API Call.
 type Endpoint string
 
 const (
@@ -20,7 +21,7 @@ const (
 )
 
 // HTTPClient interface.
-type HTTPClient interface{
+type HTTPClient interface {
 	Do(*http.Request) (*http.Response, error)
 }
 
@@ -30,10 +31,12 @@ type Request interface {
 	URL() string
 }
 
+// RequestBody for API.
 type RequestBody interface {
 	Body() interface{}
 }
 
+// Response body
 type Response struct {
 	Success   bool            `json:"success"`
 	Code      int             `json:"code"`
@@ -48,6 +51,7 @@ type TokenStorage interface {
 	Refresh(c *Client) error
 }
 
+// Error info.
 type Error struct {
 	Code int    `json:"code"`
 	Msg  string `json:"msg"`

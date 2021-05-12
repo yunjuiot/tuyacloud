@@ -7,22 +7,27 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
+	"github.com/cenkalti/backoff/v4"
 	"github.com/go-log/log"
 	"github.com/go-playground/validator/v10"
 	"github.com/pkg/errors"
 )
 
+// Client for tuya cloud.
 type Client struct {
 	endpoint  string
 	accessID  string
 	accessKey string
 
+	lock       sync.Mutex
 	httpClient HTTPClient
 	logger     log.Logger
 	storage    TokenStorage
 	validator  *validator.Validate
+	maxRetires uint64
 }
 
 // NewClient returns API client.
@@ -32,6 +37,7 @@ func NewClient(endpoint Endpoint, accessID, accessKey string, opts ...Option) (c
 		httpClient: &http.Client{Timeout: 10 * time.Second},
 		logger:     log.DefaultLogger,
 		storage:    &MemoryStore{},
+		maxRetires: 5,
 	}
 	for _, opt := range opts {
 		opt(conf)
@@ -40,6 +46,7 @@ func NewClient(endpoint Endpoint, accessID, accessKey string, opts ...Option) (c
 	c.logger = conf.logger
 	c.storage = conf.storage
 	c.validator = validator.New()
+	c.maxRetires = conf.maxRetires
 	return
 }
 
@@ -54,6 +61,7 @@ func (c *Client) isBody(r Request) bool {
 	return false
 }
 
+// Request to TUYA.
 func (c *Client) Request(r Request) (req *http.Request, err error) {
 	// Check params by go-playground/validator
 	err = c.validator.Struct(r)
@@ -98,6 +106,7 @@ func (c *Client) Request(r Request) (req *http.Request, err error) {
 	return
 }
 
+// Parse response body.
 func (c *Client) Parse(res *http.Response, resp interface{}) error {
 	defer res.Body.Close()
 	var body Response
@@ -111,6 +120,13 @@ func (c *Client) Parse(res *http.Response, resp interface{}) error {
 		return err
 	}
 	if !body.Success {
+		// compensation mechanism for token invalid.
+		// e.g. tuya restarts its server all token will expires right now.
+		if body.Code == 1010 || body.Code == 1011 {
+			c.lock.Lock()
+			_ = c.storage.Refresh(c)
+			c.lock.Unlock()
+		}
 		return errors.Wrap(&Error{
 			Code: body.Code,
 			Msg:  body.Msg,
@@ -120,11 +136,18 @@ func (c *Client) Parse(res *http.Response, resp interface{}) error {
 	return err
 }
 
+// Do send HTTP request.
 func (c *Client) Do(r *http.Request) (res *http.Response, err error) {
-	res, err = c.httpClient.Do(r)
+	// ExponentialBackOff support.
+	err = backoff.Retry(func() error {
+		var e error
+		res, e = c.httpClient.Do(r)
+		return e
+	}, backoff.WithMaxRetries(backoff.NewExponentialBackOff(), c.maxRetires))
 	return
 }
 
+// DoAndParse = Do + Parse.
 func (c *Client) DoAndParse(r Request, resp interface{}) (err error) {
 	var req *http.Request
 	var res *http.Response
@@ -140,15 +163,20 @@ func (c *Client) DoAndParse(r Request, resp interface{}) (err error) {
 	return
 }
 
+// PlainSign returns sign.
 func (c *Client) PlainSign(timestamp string) string {
 	return strings.ToUpper(HmacSha256(c.accessID+timestamp, c.accessKey))
 }
 
+// TokenSign returns token sign.
 func (c *Client) TokenSign(token, timestamp string) string {
 	return strings.ToUpper(HmacSha256(c.accessID+token+timestamp, c.accessKey))
 }
 
+// Token returns access token.
 func (c *Client) Token() (token string, err error) {
+	c.lock.Lock()
+	defer c.lock.Unlock()
 	token = c.storage.Token()
 	if token == "" {
 		err = c.storage.Refresh(c)

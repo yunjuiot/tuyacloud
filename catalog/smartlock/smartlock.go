@@ -155,22 +155,26 @@ type DynamicPwdResponse struct {
 }
 
 const (
+	// OfflineTempPwdTypeMultiTime multiple uses.
 	OfflineTempPwdTypeMultiTime = 0
-	OfflineTempPwdTypeOneTime   = 1
-	OfflineTempPwdTClean        = 9
+	// OfflineTempPwdTypeOneTime single use.
+	OfflineTempPwdTypeOneTime = 1
+	// OfflineTempPwdTClean clear all passwords.
+	OfflineTempPwdTClean = 9
 )
 
 // OfflineTempPwdRequest request to a offline temp password
 type OfflineTempPwdRequest struct {
 	DeviceID string `json:"-" validate:"required"`
 
-	EffectiveTime int64    `json:"effective_time" validate:"required"`
-	InvalidTime   int64    `json:"invalid_time" validate:"required"`
+	EffectiveTime int64  `json:"effective_time" validate:"required"`
+	InvalidTime   int64  `json:"invalid_time" validate:"required"`
 	Name          string `json:"name"`
 	Type          int    `json:"type"`
 	Lang          string `json:"lang" validate:"required"`
 }
 
+// Body struct.
 func (d *OfflineTempPwdRequest) Body() interface{} {
 	return d
 }
