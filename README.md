@@ -7,7 +7,9 @@
 [![Release](https://img.shields.io/github/release/yunjuiot/tuyacloud.svg?style=flat-square&include_prereleases)](https://github.com/yunjuiot/tuyacloud/releases)
 [![GitHub issues](https://img.shields.io/github/issues/yunjuiot/tuyacloud?style=flat-square)](https://github.com/yunjuiot/tuyacloud/issues)
 
-unofficial Tuya Cloud API SDK 
+This repo is MOVING to [`https://github.com/ekeynow/tuyacloud`](https://github.com/ekeynow/tuyacloud)
+
+unofficial Tuya Cloud API SDK.
 
 ## Status
 
